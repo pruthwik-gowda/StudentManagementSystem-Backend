@@ -4,6 +4,8 @@ package com.example.StudentManagementSystem.service;
 import com.example.StudentManagementSystem.entity.Student;
 import com.example.StudentManagementSystem.repositary.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getAllStudents(){
-        return studentRepository.findAll();
+    public Page<Student> getAllStudents(Pageable pageable){
+        return studentRepository.findAll(pageable);
     }
 
     @Override
@@ -48,6 +50,11 @@ public class StudentServiceImpl implements StudentService {
         }
         studentRepository.deleteById(id);
     }
+
+    public Page<Student> searchStudents(String keyword, Pageable pageable) {
+        return studentRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
 
 
 }
