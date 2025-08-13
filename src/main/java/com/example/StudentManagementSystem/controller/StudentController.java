@@ -2,21 +2,27 @@ package com.example.StudentManagementSystem.controller;
 
 import com.example.StudentManagementSystem.dto.StudentDetailDto;
 import com.example.StudentManagementSystem.dto.StudentDto;
+import com.example.StudentManagementSystem.dto.UpdateStudentDto;
 import com.example.StudentManagementSystem.entity.Student;
 import com.example.StudentManagementSystem.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class StudentController {
+
 
     private final StudentService studentService;
 
@@ -75,26 +81,7 @@ public class StudentController {
         }
     }
 
-    @PutMapping("/students/{id}")
-    public ResponseEntity<StudentDto> updateStudent(@ModelAttribute Student student, @PathVariable Integer id) {
-        System.out.println("=== UPDATE STUDENT WITH @ModelAttribute ===");
-        System.out.println("Path ID: " + id);
-        System.out.println("Received student: " + student);
-        System.out.println("Name: " + student.getName());
-        System.out.println("Email: " + student.getEmail());
-        System.out.println("Phone: " + student.getPhone());
-
-        try {
-            StudentDto updatedStudent = studentService.updateStudent(id, student);
-            System.out.println("Student updated successfully: " + updatedStudent);
-            return ResponseEntity.ok(updatedStudent);
-        } catch (Exception e) {
-            System.err.println("Error updating student: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
+//    // Using @RequestBody for JSON data (Doesn't work in our case, 415 Unsupported Media Type error)
 //    @PutMapping("/students/{id}")
 //    public ResponseEntity<StudentDto> updateStudent(
 //            @RequestBody Student student,
@@ -103,6 +90,44 @@ public class StudentController {
 //        StudentDto updatedStudent = studentService.updateStudent(id, student);
 //        return ResponseEntity.ok(updatedStudent);
 //    }
+
+    //Using @RequestBody for JSON data and using DTO for structured data
+    @PutMapping("/students/{id}")
+    public ResponseEntity<StudentDto> updateStudent(
+            @RequestBody UpdateStudentDto studentData,
+            @PathVariable Integer id
+    ) {
+        log.info("Received ID from path: " + id);
+        log.info("Received data from frontend: " + studentData);
+
+        Student student = new Student();
+        student.setName(studentData.getName());
+        student.setEmail(studentData.getEmail());
+        student.setPhone(studentData.getPhone());
+
+        StudentDto updatedStudent = studentService.updateStudent(id, student);
+        return ResponseEntity.ok(updatedStudent);
+    }
+
+//    // Using Map<String, String> for flexible data structure
+//    // This approach is less structured and not recommended for production use
+//    @PutMapping("/students/{id}")
+//    public ResponseEntity<StudentDto> updateStudent(
+//            @RequestBody Map<String, String> studentData,
+//            @PathVariable Integer id
+//    ) {
+//        log.info("Received ID from path: " + id);
+//        log.info("Received data from frontend: " + studentData);
+//
+//        Student student = new Student();
+//        student.setName(studentData.get("name"));
+//        student.setEmail(studentData.get("email"));
+//        student.setPhone(studentData.get("phone"));
+//
+//        StudentDto updatedStudent = studentService.updateStudent(id, student);
+//        return ResponseEntity.ok(updatedStudent);
+//    }
+
 
     @DeleteMapping("/students/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Integer id) {
