@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "students")
+@Table(name = "teachers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "classStudents")
-public class Student {
+@ToString(exclude = "classes")
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
-    private Integer studentId;
+    @Column(name = "teacher_id")
+    private Integer teacherId;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -32,12 +32,15 @@ public class Student {
     @Column(name = "phone", length = 15)
     private String phone;
 
+    @Column(name = "specialization", length = 100)
+    private String specialization;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<ClassStudent> classStudents;
+    private List<Class> classes;
 
     @PrePersist
     protected void onCreate() {
