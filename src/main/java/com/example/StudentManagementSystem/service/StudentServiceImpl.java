@@ -5,6 +5,7 @@ import com.example.StudentManagementSystem.dto.StudentDto;
 import com.example.StudentManagementSystem.dto.StudentClassDto;
 import com.example.StudentManagementSystem.dto.TeacherDto;
 import com.example.StudentManagementSystem.entity.Student;
+import com.example.StudentManagementSystem.entity.Teacher;
 import com.example.StudentManagementSystem.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -91,6 +92,8 @@ public class StudentServiceImpl implements StudentService {
                 student.getCreatedAt()
         );
     }
+
+
 
     private StudentDetailDto convertToDetailDto(Student student) {
         StudentDetailDto dto = new StudentDetailDto();
