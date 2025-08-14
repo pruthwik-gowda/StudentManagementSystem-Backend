@@ -2,6 +2,7 @@ package com.example.StudentManagementSystem.controller;
 
 
 import com.example.StudentManagementSystem.dto.TeacherDto;
+import com.example.StudentManagementSystem.dto.TeacherWithClassesDto;
 import com.example.StudentManagementSystem.dto.UpdateTeacherDto;
 import com.example.StudentManagementSystem.entity.Teacher;
 import com.example.StudentManagementSystem.service.TeacherService;
@@ -45,6 +46,16 @@ public class TeacherController {
     ResponseEntity<TeacherDto> getTeacherById(@PathVariable Integer teacherId) {
         TeacherDto teacher = teacherService.getTeacherById(teacherId);
         return teacher != null ? ResponseEntity.ok(teacher) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{teacherId}/details")
+    ResponseEntity<TeacherWithClassesDto> getTeacherWithClasses(@PathVariable Integer teacherId) {
+        try {
+            TeacherWithClassesDto teacherWithClasses = teacherService.getTeacherWithClasses(teacherId);
+            return ResponseEntity.ok(teacherWithClasses);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
